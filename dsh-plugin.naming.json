@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "policy": "dsh-plugin-naming/v1",
+  "plugin": {
+    "namespace": "local",
+    "name": "agent-defs",
+    "coordinate": "local/agent-defs",
+    "packageName": "@local/dsh-agent-defs"
+  },
+  "names": {
+    "pluginNames": ["agent-defs"],
+    "loaderIds": ["agent-defs"],
+    "services": [],
+    "tools": ["subagent_defined"],
+    "commands": [],
+    "skills": [],
+    "skillProviders": [],
+    "events": [],
+    "settingsNamespaces": [],
+    "routes": []
+  }
+}

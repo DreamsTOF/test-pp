@@ -1,0 +1,26 @@
+{
+  "name": "@local/dsh-agent-defs",
+  "version": "0.1.0",
+  "description": "Load Claude-style agent definition Markdown files from ~/.agents/agent and register each one as a DeepSeek Harness Agent Preset, so a parent model can pick a child definition with agent_preset.",
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": {
+      "default": "./lib/index.js"
+    },
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "cordis.patch.yml",
+    "README.md"
+  ],
+  "scripts": {
+    "check": "node test/self-check.mjs"
+  },
+  "license": "MIT",
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "^4.0.2"
+  }
+}

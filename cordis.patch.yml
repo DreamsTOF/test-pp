@@ -1,0 +1,50 @@
+# Mount agent definition files as Agent Presets.
+#
+# Each `*.md` file under `roots` becomes one `@deepseek-ai/dsh-agent-preset`
+# declaration: frontmatter `tools`/`skills` select the plugins the child mounts,
+# and the Markdown body becomes its persona. Edit a file and the next delegation
+# sees the new composition; running sessions keep the one they started with.
+#
+# `expose` mounts one delegation tool whose `agent_preset` enum is exactly the
+# set of definition files present right now. The tool is remounted only when
+# that set changes, so editing a definition's body does not disturb any agent.
+#
+# This must be an `- insert:` row: a bare `- id: ... name: ...` entry only
+# patches a row some bundle already inserted, and would be skipped as
+# "entry not found".
+#
+# Install as a bundle: `dsh plugin --profile <name> add <path to this directory>`.
+# Without installing, a profile patch can mount the module directly:
+#   - insert:
+#       - id: agent-defs
+#         name: 'file:///C:/Users/dream/dsh-pulgn/dsh-agent-defs/lib/index.js'
+- insert:
+    - id: agent-defs
+      name: '@local/dsh-agent-defs'
+      config:
+        # Directories scanned for *.md, in order. Omitted = ~/.agents/agents.
+        roots:
+          - '~/.agents/agents'
+        # Poll interval for edits; 0 disables watching (restart to reload).
+        watchIntervalMs: 2000
+        # Roster position of the first definition; later files increment it.
+        order: 100
+        includeSkillLoader: true
+        # Offer the definitions to the parent model through one tool.
+        # `provider` is the SUBAGENT BACKEND (spawn/fork); `defaultProvider` is
+        # the LLM route provider that a bare `model:` in a definition assumes.
+        # It must name a provider that actually has an adapter in this profile —
+        # a model id alone cannot be checked until a provider is known.
+        # Set `expose: false` to register the presets without adding a tool.
+        expose:
+          toolName: subagent_defined
+          provider: spawn
+          defaultProvider: magpie
+        # The shipped `subagent`/`subagent_fork` are mounted by the preset inside
+        # an ancestor scope, so a profile `disabled: true` cannot reach them and
+        # `tools.restrict()` needs that exact agent scope. They are hidden at
+        # request assembly instead — but only while our tool actually serves, so
+        # an empty definition directory never strands the model.
+        # Set `false` to keep both tool families visible.
+        hideOfficialTools:
+          stripPrompt: true
